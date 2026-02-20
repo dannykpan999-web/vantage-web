@@ -1,33 +1,37 @@
 import { useEffect, useState } from "react";
 import { useSearchParams, useNavigate } from "react-router-dom";
-import { getPaymentStatus } from "../services/payment";
+import { getPaymentStatus, sandboxComplete } from "../services/payment";
 import Header from "../components/layout/Header";
 import Footer from "../components/layout/Footer";
 import { SkeletonCard } from "../components/ui/Skeleton";
 
-type Status = "pending" | "completed" | "failed" | "loading";
+type Status = "pending" | "completed" | "failed" | "loading" | "simulating";
 
 export default function Payment() {
   const [params] = useSearchParams();
   const navigate = useNavigate();
   const bookingId = params.get("booking_id");
   const paymentUrl = params.get("payment_url");
+  const isSandbox = params.get("is_sandbox") === "true";
 
   const [status, setStatus] = useState<Status>("loading");
   const [pollCount, setPollCount] = useState(0);
+  const [sandboxError, setSandboxError] = useState("");
 
   useEffect(() => {
-    if (!bookingId) {
-      setStatus("failed");
+    if (!bookingId) { setStatus("failed"); return; }
+
+    // Sandbox mode: don't open Square window, don't poll — just show the simulate button
+    if (isSandbox) {
+      setStatus("pending");
       return;
     }
 
-    // If Square redirected back with a payment_url, open it
+    // Real Square flow: open payment window + poll
     if (paymentUrl) {
       window.open(decodeURIComponent(paymentUrl), "_blank");
     }
 
-    // Poll for payment status every 4 seconds
     const interval = setInterval(async () => {
       try {
         const result = await getPaymentStatus(bookingId);
@@ -46,11 +50,22 @@ export default function Payment() {
       }
     }, 4000);
 
-    // Stop after 5 min
     setTimeout(() => clearInterval(interval), 300000);
-
     return () => clearInterval(interval);
-  }, [bookingId, paymentUrl]);
+  }, [bookingId, paymentUrl, isSandbox]);
+
+  async function handleSandboxComplete() {
+    if (!bookingId) return;
+    setSandboxError("");
+    setStatus("simulating");
+    try {
+      await sandboxComplete(bookingId);
+      setStatus("completed");
+    } catch {
+      setSandboxError("Error al simular pago. Intenta de nuevo.");
+      setStatus("pending");
+    }
+  }
 
   return (
     <>
@@ -64,13 +79,7 @@ export default function Payment() {
           padding: "8rem 1.5rem 4rem",
         }}
       >
-        <div
-          style={{
-            maxWidth: "480px",
-            width: "100%",
-            textAlign: "center",
-          }}
-        >
+        <div style={{ maxWidth: "480px", width: "100%", textAlign: "center" }}>
           {/* Logo mark */}
           <div
             style={{
@@ -102,7 +111,7 @@ export default function Payment() {
             </>
           )}
 
-          {status === "pending" && (
+          {(status === "pending" || status === "simulating") && (
             <>
               {/* Pulsing ring */}
               <div
@@ -137,7 +146,7 @@ export default function Payment() {
                   marginBottom: "1rem",
                 }}
               >
-                Esperando Pago
+                {isSandbox ? "Modo Prueba" : "Esperando Pago"}
               </h2>
               <p
                 style={{
@@ -149,26 +158,65 @@ export default function Payment() {
                   marginBottom: "2rem",
                 }}
               >
-                Completa el pago en la ventana de Square.
-                <br />
-                Esta pagina se actualizara automaticamente.
+                {isSandbox
+                  ? "Sistema de pagos en modo de prueba. Usa el boton de abajo para simular un pago completado."
+                  : "Completa el pago en la ventana de Square.\nEsta pagina se actualizara automaticamente."}
               </p>
-              <p
-                style={{
-                  fontFamily: "Montserrat, sans-serif",
-                  fontWeight: 300,
-                  fontSize: "0.75rem",
-                  color: "var(--gray-border)",
-                }}
-              >
-                Verificacion {pollCount} &bull; Booking #{bookingId}
-              </p>
+
+              {isSandbox && (
+                <>
+                  {sandboxError && (
+                    <p
+                      style={{
+                        fontFamily: "Montserrat, sans-serif",
+                        fontSize: "0.8rem",
+                        color: "#c00",
+                        marginBottom: "1rem",
+                      }}
+                    >
+                      {sandboxError}
+                    </p>
+                  )}
+                  <button
+                    onClick={handleSandboxComplete}
+                    disabled={status === "simulating"}
+                    style={{
+                      fontFamily: "Montserrat, sans-serif",
+                      fontWeight: 500,
+                      fontSize: "0.75rem",
+                      letterSpacing: "0.2em",
+                      textTransform: "uppercase",
+                      backgroundColor: "var(--black)",
+                      color: "var(--white)",
+                      border: "none",
+                      padding: "1rem 2.5rem",
+                      cursor: status === "simulating" ? "not-allowed" : "pointer",
+                      opacity: status === "simulating" ? 0.6 : 1,
+                    }}
+                  >
+                    {status === "simulating" ? "Procesando..." : "Simular Pago Completado"}
+                  </button>
+                </>
+              )}
+
+              {!isSandbox && (
+                <p
+                  style={{
+                    fontFamily: "Montserrat, sans-serif",
+                    fontWeight: 300,
+                    fontSize: "0.75rem",
+                    color: "var(--gray-border)",
+                    marginTop: "1rem",
+                  }}
+                >
+                  Verificacion {pollCount} &bull; Booking #{bookingId}
+                </p>
+              )}
             </>
           )}
 
           {status === "completed" && (
             <>
-              {/* Checkmark */}
               <div
                 style={{
                   width: "80px",
@@ -207,7 +255,7 @@ export default function Payment() {
               >
                 Tu reserva ha sido confirmada.
                 <br />
-                Recibirás un correo con los detalles de tu cita.
+                Nos vemos pronto en Vantage.
               </p>
 
               <button
@@ -232,7 +280,6 @@ export default function Payment() {
 
           {status === "failed" && (
             <>
-              {/* X mark */}
               <div
                 style={{
                   width: "80px",

@@ -8,9 +8,13 @@ import type {
 
 export const createPaymentLink = async (
   bookingId: string
-): Promise<{ payment_url: string; qr_code: string }> => {
+): Promise<{ payment_url: string | null; qr_code: string | null; is_sandbox: boolean }> => {
   const r = await api.post("/payments/create-link", { booking_id: bookingId });
   return r.data;
+};
+
+export const sandboxComplete = async (bookingId: string): Promise<void> => {
+  await api.post(`/payments/sandbox-complete/${bookingId}`);
 };
 
 export const getPaymentStatus = async (
@@ -60,6 +64,7 @@ export const rejectWithdrawal = async (id: string) => {
 // Legacy object export
 export const paymentService = {
   createPaymentLink,
+  sandboxComplete,
   getPaymentStatus,
   getWallet,
   getTransactions,

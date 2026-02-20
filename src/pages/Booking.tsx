@@ -78,8 +78,12 @@ export default function Booking() {
   async function handleConfirm() {
     try {
       const booking = await bookMutation.mutateAsync();
-      const { payment_url } = await createPaymentLink(booking.id);
-      navigate("/payment?booking_id=" + booking.id + "&payment_url=" + encodeURIComponent(payment_url));
+      const { payment_url, is_sandbox } = await createPaymentLink(booking.id);
+      if (is_sandbox) {
+        navigate("/payment?booking_id=" + booking.id + "&is_sandbox=true");
+      } else {
+        navigate("/payment?booking_id=" + booking.id + "&payment_url=" + encodeURIComponent(payment_url!));
+      }
     } catch {
       // mutation error state handles display
     }

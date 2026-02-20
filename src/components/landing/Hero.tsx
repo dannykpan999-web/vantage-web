@@ -4,18 +4,35 @@ export default function Hero() {
   const nav = useNavigate();
   return (
     <section style={{ position: "relative", height: "100vh", minHeight: "700px", overflow: "hidden" }}>
-      {/* BG image */}
-      <div style={{
-        position: "absolute", inset: 0,
-        backgroundImage: "url(/images/hero.webp)",
-        backgroundSize: "cover", backgroundPosition: "center top",
-        filter: "brightness(0.5)",
-      }} />
+
+      {/* Background video */}
+      <video
+        autoPlay
+        muted
+        loop
+        playsInline
+        poster="/images/hero.webp"
+        style={{
+          position: "absolute", inset: 0,
+          width: "100%", height: "100%",
+          objectFit: "cover", objectPosition: "center",
+          filter: "brightness(0.55)",
+        }}
+      >
+        {/* Wide interior pan — most cinematic for a hero */}
+        <source src="https://assets.mixkit.co/videos/43236/43236-1080.mp4" type="video/mp4" />
+        {/* Close-up haircut fallback */}
+        <source src="https://assets.mixkit.co/videos/43222/43222-1080.mp4" type="video/mp4" />
+        {/* Static image fallback for browsers that can't play video */}
+        <img src="/images/hero.webp" alt="Vantage Barbershop" style={{ width: "100%", height: "100%", objectFit: "cover" }} />
+      </video>
+
       {/* Gradient overlay */}
       <div style={{
         position: "absolute", inset: 0,
-        background: "linear-gradient(to bottom, rgba(0,0,0,0.1) 0%, rgba(0,0,0,0.6) 100%)",
+        background: "linear-gradient(to bottom, rgba(0,0,0,0.15) 0%, rgba(0,0,0,0.55) 100%)",
       }} />
+
       {/* Content */}
       <div style={{
         position: "relative", zIndex: 1, height: "100%",
@@ -93,14 +110,21 @@ export default function Hero() {
           </a>
         </div>
 
-        {/* Scroll indicator */}
-        <div style={{
-          position: "absolute", bottom: "2.5rem", left: "50%",
-          transform: "translateX(-50%)", display: "flex", flexDirection: "column",
-          alignItems: "center", gap: "8px",
-        }}>
-          <div style={{ width: "1px", height: "50px", backgroundColor: "rgba(255,255,255,0.4)" }} />
-        </div>
+      </div>
+
+      {/* Wavy bottom divider — white fill blends into section below */}
+      <div style={{ position: "absolute", bottom: 0, left: 0, right: 0, zIndex: 2, lineHeight: 0 }}>
+        <svg
+          viewBox="0 0 1440 110"
+          xmlns="http://www.w3.org/2000/svg"
+          preserveAspectRatio="none"
+          style={{ width: "100%", height: "110px", display: "block" }}
+        >
+          <path
+            d="M0,55 C180,110 360,0 540,55 C720,110 900,0 1080,55 C1260,110 1350,30 1440,55 L1440,110 L0,110 Z"
+            fill="#ffffff"
+          />
+        </svg>
       </div>
     </section>
   );

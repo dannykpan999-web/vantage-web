@@ -245,7 +245,7 @@ export default function OwnerDashboard() {
                         color: "var(--black)",
                       }}
                     >
-                      ${b.earnings.toFixed(2)}
+                      ${Number(b.earnings).toFixed(2)}
                     </span>
                   </div>
                 ))}
@@ -325,7 +325,7 @@ export default function OwnerDashboard() {
                           color: "var(--black)",
                         }}
                       >
-                        ${w.amount.toFixed(2)}
+                        ${Number(w.amount).toFixed(2)}
                       </span>
                     </div>
 

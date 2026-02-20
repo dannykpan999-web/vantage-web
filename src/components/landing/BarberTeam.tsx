@@ -38,7 +38,7 @@ export default function BarberTeam() {
 
   return (
     <section
-      id="team"
+      id="equipo"
       style={{
         padding: "var(--section-pad) 1.5rem",
         maxWidth: "var(--max-width)",

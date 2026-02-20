@@ -51,7 +51,7 @@ export default function Wallet() {
       setWdError("Ingresa un monto valido");
       return;
     }
-    if (wallet && amt > wallet.available_balance) {
+    if (wallet && amt > Number(wallet.available_balance)) {
       setWdError("Saldo insuficiente");
       return;
     }
@@ -113,15 +113,15 @@ export default function Wallet() {
             {[
               {
                 label: "Saldo Disponible",
-                value: `$${wallet.available_balance.toFixed(2)}`,
+                value: `$${Number(wallet.available_balance).toFixed(2)}`,
               },
               {
                 label: "Saldo Pendiente",
-                value: `$${wallet.pending_balance.toFixed(2)}`,
+                value: `$${Number(wallet.pending_balance).toFixed(2)}`,
               },
               {
                 label: "Total Ganado",
-                value: `$${wallet.total_earned.toFixed(2)}`,
+                value: `$${Number(wallet.total_earned).toFixed(2)}`,
               },
             ].map((card) => (
               <div
@@ -295,11 +295,11 @@ export default function Wallet() {
                       fontFamily: "'Playfair Display', serif",
                       fontSize: "1.1rem",
                       fontWeight: 700,
-                      color: tx.type === "withdrawal" ? "#c00" : "var(--black)",
+                      color: tx.type === "debit" ? "#c00" : "var(--black)",
                     }}
                   >
-                    {tx.type === "withdrawal" ? "-" : "+"}$
-                    {tx.amount.toFixed(2)}
+                    {tx.type === "debit" ? "-" : "+"}$
+                    {Number(tx.amount).toFixed(2)}
                   </span>
                 </div>
               ))}

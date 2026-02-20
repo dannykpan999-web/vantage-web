@@ -39,6 +39,7 @@ const images = [
 export default function Gallery() {
   return (
     <section
+      id="galeria"
       style={{
         backgroundColor: "#050505",
         padding: "var(--section-pad) 1.5rem",

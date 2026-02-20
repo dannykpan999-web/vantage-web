@@ -63,7 +63,7 @@ export interface Payment {
 export interface WalletTransaction {
   id: string;
   wallet_id: string;
-  type: "credit" | "debit" | "withdrawal";
+  type: "credit" | "debit";
   amount: number;
   reference_id?: string;
   description: string;
