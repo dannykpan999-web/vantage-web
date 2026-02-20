@@ -6,16 +6,18 @@ import { useAuthStore } from "../../store/authStore";
 const LANDING_NAV = [
   { label: "Studio",  id: "servicios" },
   { label: "Equipo",  id: "equipo"    },
-  { label: "Galeria", id: "galeria"   },
+  { label: "Galería", id: "galeria"   },
   { label: "Shop",    id: "shop"      },
 ];
 
-// Mobile overlay nav — without Shop (rendered separately as highlighted)
-const MOBILE_NAV = [
+// Mobile overlay nav — split around Shop (rendered highlighted between Studio and Equipo)
+const MOBILE_NAV_TOP = [
   { label: "Inicio",  id: "" },
   { label: "Studio",  id: "servicios" },
+];
+const MOBILE_NAV_BOT = [
   { label: "Equipo",  id: "equipo"    },
-  { label: "Galeria", id: "galeria"   },
+  { label: "Galería", id: "galeria"   },
 ];
 
 export default function Header() {
@@ -205,9 +207,12 @@ export default function Header() {
               fontFamily: "'Playfair Display',serif", fontSize: "22px",
               fontWeight: 400, color: "#fff", letterSpacing: "0.06em",
             }}>VANTAGE</span>
-            <button onClick={() => setMenuOpen(false)} style={{
+            <button onClick={() => setMenuOpen(false)} aria-label="Cerrar menu" style={{
               background: "none", border: "none", cursor: "pointer",
-              color: "#fff", fontSize: "32px", fontWeight: 200, lineHeight: 1, padding: "4px 8px",
+              color: "#fff", fontSize: "32px", fontWeight: 200, lineHeight: 1,
+              padding: "12px 16px", margin: "-12px -16px",
+              minWidth: "56px", minHeight: "56px",
+              display: "flex", alignItems: "center", justifyContent: "center",
             }}>×</button>
           </div>
           <div style={{ height: "1px", backgroundColor: "rgba(255,255,255,0.08)" }} />
@@ -219,8 +224,8 @@ export default function Header() {
           }}>
             {!isAuthenticated && (
               <>
-                {/* Inicio + regular nav items */}
-                {MOBILE_NAV.map((item, i) => (
+                {/* Inicio + Studio */}
+                {MOBILE_NAV_TOP.map((item, i) => (
                   <button key={item.label} onClick={() => handleNavClick(item.id)}
                     style={{
                       fontFamily: "'Playfair Display',serif",
@@ -234,20 +239,20 @@ export default function Header() {
                   </button>
                 ))}
 
-                {/* SHOP — highlighted with gold color + bag icon */}
+                {/* SHOP — highlighted with gold color + bag icon (position 3, after Studio) */}
                 <button onClick={() => handleNavClick("shop")}
                   style={{
                     fontFamily: "'Playfair Display',serif",
                     fontSize: "clamp(26px,7vw,48px)", fontWeight: 700,
-                    color: "#C9A96E", background: "none", border: "none",
+                    color: "#D4A020", background: "none", border: "none",
                     cursor: "pointer", textAlign: "left", padding: 0,
                     letterSpacing: "0.03em", opacity: 0,
-                    animation: "fadeIn 0.4s ease 0.32s forwards",
+                    animation: "fadeIn 0.4s ease 0.18s forwards",
                     display: "flex", alignItems: "center", gap: "14px",
                   }}>
-                  <svg width="clamp(24px,5vw,36px)" height="clamp(24px,5vw,36px)"
+                  <svg width="clamp(22px,4.5vw,32px)" height="clamp(22px,4.5vw,32px)"
                     viewBox="0 0 24 24" fill="none" stroke="currentColor"
-                    strokeWidth="1.8" strokeLinecap="round" strokeLinejoin="round">
+                    strokeWidth="1" strokeLinecap="round" strokeLinejoin="round">
                     <path d="M6 2L3 6v14a2 2 0 002 2h14a2 2 0 002-2V6l-3-4z"/>
                     <line x1="3" y1="6" x2="21" y2="6"/>
                     <path d="M16 10a4 4 0 01-8 0"/>
@@ -255,24 +260,39 @@ export default function Header() {
                   Shop
                 </button>
 
+                {/* Equipo + Galería */}
+                {MOBILE_NAV_BOT.map((item, i) => (
+                  <button key={item.label} onClick={() => handleNavClick(item.id)}
+                    style={{
+                      fontFamily: "'Playfair Display',serif",
+                      fontSize: "clamp(26px,7vw,48px)", fontWeight: 400,
+                      color: "#fff", background: "none", border: "none",
+                      cursor: "pointer", textAlign: "left", padding: 0,
+                      letterSpacing: "0.03em", opacity: 0,
+                      animation: `fadeIn 0.4s ease ${0.25 + i * 0.07}s forwards`,
+                    }}>
+                    {item.label}
+                  </button>
+                ))}
+
                 <div style={{ height: "1px", backgroundColor: "rgba(255,255,255,0.1)", margin: "4px 0" }} />
 
                 <button onClick={() => { setMenuOpen(false); navigate("/login"); }}
                   style={{
-                    fontFamily: "Montserrat,sans-serif", fontSize: "11px", fontWeight: 500,
+                    fontFamily: "Montserrat,sans-serif", fontSize: "13px", fontWeight: 500,
                     letterSpacing: "2px", textTransform: "uppercase",
-                    color: "rgba(255,255,255,0.45)", background: "none", border: "none",
+                    color: "rgba(255,255,255,0.75)", background: "none", border: "none",
                     cursor: "pointer", textAlign: "left", padding: 0, opacity: 0,
                     animation: "fadeIn 0.4s ease 0.44s forwards",
-                  }}>Iniciar Sesion</button>
+                  }}>Iniciar Sesión</button>
 
                 <button onClick={() => { setMenuOpen(false); navigate("/booking"); }}
                   style={{
                     fontFamily: "Montserrat,sans-serif", fontSize: "11px", fontWeight: 500,
                     letterSpacing: "2px", textTransform: "uppercase",
                     color: "#000", backgroundColor: "#fff", border: "none",
-                    cursor: "pointer", padding: "14px 32px",
-                    alignSelf: "flex-start", opacity: 0,
+                    cursor: "pointer", padding: "20px 0",
+                    alignSelf: "stretch", textAlign: "center", opacity: 0,
                     animation: "fadeIn 0.4s ease 0.52s forwards",
                   }}>Reservar Ahora</button>
               </>

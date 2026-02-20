@@ -1,3 +1,5 @@
+import { useInView } from "../../hooks/useInView";
+
 const images = [
   {
     src: "/images/gallery-1.webp",
@@ -37,21 +39,39 @@ const images = [
 ];
 
 export default function Gallery() {
+  const [headingRef, headingInView] = useInView();
+  const [gridRef, gridInView] = useInView();
+
   return (
     <section
       id="galeria"
       style={{
+        position: "relative",
         backgroundColor: "#050505",
         padding: "var(--section-pad) 1.5rem",
       }}
     >
+      {/* Angular divider: white V pointing DOWN into dark Gallery */}
+      <div style={{ position: "absolute", top: 0, left: 0, right: 0, zIndex: 3, lineHeight: 0 }}>
+        <svg
+          viewBox="0 0 1440 90"
+          xmlns="http://www.w3.org/2000/svg"
+          preserveAspectRatio="none"
+          style={{ width: "100%", height: "clamp(30px, 6.25vw, 90px)", display: "block" }}
+        >
+          <path d="M0,0 L720,90 L1440,0 Z" fill="#ffffff" />
+        </svg>
+      </div>
+
       {/* Heading */}
       <div
+        ref={headingRef}
         style={{
           textAlign: "center",
-          marginBottom: "3.5rem",
           maxWidth: "var(--max-width)",
           margin: "0 auto 3.5rem",
+          opacity: 0,
+          animation: headingInView ? "fadeInUp 0.7s ease-out forwards" : "none",
         }}
       >
         <p
@@ -82,6 +102,7 @@ export default function Gallery() {
 
       {/* Masonry grid */}
       <div
+        ref={gridRef}
         style={{
           maxWidth: "var(--max-width)",
           margin: "0 auto",
@@ -97,9 +118,10 @@ export default function Gallery() {
               marginBottom: "1rem",
               overflow: "hidden",
               position: "relative",
-              animation: `fadeIn 0.8s ease forwards`,
-              animationDelay: `${i * 0.1}s`,
               opacity: 0,
+              animation: gridInView
+                ? `fadeInUp 0.7s ease-out ${i * 0.1}s forwards`
+                : "none",
             }}
           >
             <img

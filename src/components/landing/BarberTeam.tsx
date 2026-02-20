@@ -1,4 +1,5 @@
 import { useNavigate } from "react-router-dom";
+import { useInView } from "../../hooks/useInView";
 
 const barbers = [
   {
@@ -35,18 +36,27 @@ const barbers = [
 
 export default function BarberTeam() {
   const navigate = useNavigate();
+  const [headingRef, headingInView] = useInView();
+  const [cardsRef, cardsInView] = useInView();
 
   return (
     <section
       id="equipo"
       style={{
+        position: "relative",
         padding: "var(--section-pad) 1.5rem",
-        maxWidth: "var(--max-width)",
-        margin: "0 auto",
       }}
     >
+      <div style={{ maxWidth: "var(--max-width)", margin: "0 auto" }}>
       {/* Heading */}
-      <div style={{ textAlign: "center", marginBottom: "4rem" }}>
+      <div
+        ref={headingRef}
+        style={{
+          textAlign: "center", marginBottom: "4rem",
+          opacity: 0,
+          animation: headingInView ? "fadeInUp 0.7s ease-out forwards" : "none",
+        }}
+      >
         <p
           style={{
             fontFamily: "Montserrat, sans-serif",
@@ -75,6 +85,7 @@ export default function BarberTeam() {
 
       {/* Grid */}
       <div
+        ref={cardsRef}
         style={{
           display: "grid",
           gridTemplateColumns: "repeat(auto-fit, minmax(280px, 1fr))",
@@ -88,9 +99,10 @@ export default function BarberTeam() {
               position: "relative",
               overflow: "hidden",
               cursor: "pointer",
-              animation: `fadeIn 0.6s ease forwards`,
-              animationDelay: `${i * 0.15}s`,
               opacity: 0,
+              animation: cardsInView
+                ? `fadeInUp 0.7s ease-out ${i * 0.15}s forwards`
+                : "none",
             }}
             onClick={() => navigate("/booking")}
           >
@@ -255,6 +267,7 @@ export default function BarberTeam() {
           Reservar con un Experto
         </button>
       </div>
+      </div>{/* end inner maxWidth wrapper */}
     </section>
   );
 }

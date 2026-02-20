@@ -1,4 +1,5 @@
 import { useNavigate } from "react-router-dom";
+import { useInView } from "../../hooks/useInView";
 
 const svcs = [
   {
@@ -6,7 +7,7 @@ const svcs = [
     d: "Precisión artesanal con técnicas tradicionales y tijeras de precisión.",
     p: "$45",
     t: "45 min",
-    img: "/images/service-corte.jpg",
+    img: "/images/service-corte.webp",
   },
   {
     n: "Afeitado con Navaja",
@@ -20,12 +21,14 @@ const svcs = [
     d: "Corte, barba y tratamiento facial. El lujo absoluto en un solo servicio.",
     p: "$95",
     t: "90 min",
-    img: "/images/service-completa.jpg",
+    img: "/images/service-completa.webp",
   },
 ];
 
 export default function Services() {
   const nav = useNavigate();
+  const [headingRef, headingInView] = useInView();
+  const [cardsRef, cardsInView] = useInView();
 
   return (
     <section id="servicios" style={{ padding: "var(--section-pad)", background: "#fff" }}>
@@ -42,7 +45,14 @@ export default function Services() {
       <div style={{ maxWidth: "1400px", margin: "0 auto" }}>
 
         {/* Heading */}
-        <div style={{ marginBottom: "clamp(48px,7vw,80px)" }}>
+        <div
+          ref={headingRef}
+          style={{
+            marginBottom: "clamp(48px,7vw,80px)",
+            opacity: 0,
+            animation: headingInView ? "fadeInUp 0.7s ease-out forwards" : "none",
+          }}
+        >
           <p style={{
             fontFamily: "Montserrat,sans-serif", fontSize: "10px",
             letterSpacing: "0.24em", textTransform: "uppercase",
@@ -55,16 +65,25 @@ export default function Services() {
         </div>
 
         {/* Cards */}
-        <div style={{
-          display: "grid",
-          gridTemplateColumns: "repeat(auto-fit,minmax(280px,1fr))",
-          gap: "1px", background: "#e5e5e5", border: "1px solid #e5e5e5",
-        }}>
+        <div
+          ref={cardsRef}
+          style={{
+            display: "grid",
+            gridTemplateColumns: "repeat(auto-fit,minmax(280px,1fr))",
+            gap: "1px", background: "#e5e5e5", border: "1px solid #e5e5e5",
+          }}
+        >
           {svcs.map((s, i) => (
             <div
               key={i}
               className="svc-card"
-              style={{ background: "#fff", transition: "background 0.3s ease" }}
+              style={{
+                background: "#fff", transition: "background 0.3s ease",
+                opacity: 0,
+                animation: cardsInView
+                  ? `fadeInUp 0.7s ease-out ${i * 0.15}s forwards`
+                  : "none",
+              }}
             >
               {/* Image */}
               <div style={{ overflow: "hidden" }}>
