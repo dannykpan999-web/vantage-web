@@ -67,7 +67,7 @@ export default function FeaturedProducts() {
         .sp-card { text-align: center; cursor: pointer; }
         .sp-card:hover .sp-img {
           transform: scale(1.04);
-          filter: brightness(1.12) grayscale(0%);
+          filter: brightness(1.05) grayscale(0%);
         }
         .sp-img {
           width: 100%;
@@ -75,7 +75,7 @@ export default function FeaturedProducts() {
           object-fit: cover;
           display: block;
           transition: transform 0.5s ease, filter 0.5s ease;
-          filter: grayscale(20%);
+          filter: grayscale(100%);
         }
         @media (min-width: 901px) {
           .sp-img { aspect-ratio: 3/4; }
@@ -182,17 +182,6 @@ export default function FeaturedProducts() {
 
       </div>
 
-      {/* Angular divider: dark shop → white services, V pointing UP */}
-      <div style={{ position: "absolute", bottom: 0, left: 0, right: 0, zIndex: 3, lineHeight: 0 }}>
-        <svg
-          viewBox="0 0 1440 90"
-          xmlns="http://www.w3.org/2000/svg"
-          preserveAspectRatio="none"
-          style={{ width: "100%", height: "clamp(30px, 6.25vw, 90px)", display: "block" }}
-        >
-          <path d="M0,90 L720,0 L1440,90 Z" fill="#ffffff" />
-        </svg>
-      </div>
     </section>
   );
 }

@@ -1,7 +1,9 @@
 import { useNavigate } from "react-router-dom";
+import { useT } from "../../i18n";
 
 export default function Hero() {
   const nav = useNavigate();
+  const t = useT();
   return (
     <section style={{ position: "relative", height: "100vh", minHeight: "700px", overflow: "hidden" }}>
 
@@ -62,9 +64,9 @@ export default function Hero() {
           fontSize: "clamp(36px, 6vw, 82px)", fontWeight: 400, color: "#fff",
           lineHeight: 1.1, maxWidth: "820px", marginBottom: "24px", opacity: 0,
           animation: "fadeIn 1s ease-out 0.7s forwards",
-        }}>
-          The Barbershop.<br /><em>Elevated.</em>
-        </h1>
+        }}
+          dangerouslySetInnerHTML={{ __html: t("hero.headline") }}
+        />
 
         {/* Subline */}
         <p style={{
@@ -74,7 +76,7 @@ export default function Hero() {
           marginBottom: "clamp(40px, 6vw, 64px)", opacity: 0,
           animation: "fadeIn 1s ease-out 0.9s forwards",
         }}>
-          Reserve su cita en menos de 3 pasos.
+          {t("hero.subline")}
         </p>
 
         {/* CTA buttons */}
@@ -94,7 +96,7 @@ export default function Hero() {
             onMouseEnter={e => (e.currentTarget.style.opacity = "0.85")}
             onMouseLeave={e => (e.currentTarget.style.opacity = "1")}
           >
-            Reservar Ahora
+            {t("hero.cta1")}
           </button>
           <a
             href="#servicios"
@@ -106,26 +108,12 @@ export default function Hero() {
               textDecoration: "none", display: "inline-flex", alignItems: "center",
             }}
           >
-            Explorar
+            {t("hero.cta2")}
           </a>
         </div>
 
       </div>
 
-      {/* Wavy bottom divider — white fill blends into section below */}
-      <div style={{ position: "absolute", bottom: 0, left: 0, right: 0, zIndex: 2, lineHeight: 0 }}>
-        <svg
-          viewBox="0 0 1440 110"
-          xmlns="http://www.w3.org/2000/svg"
-          preserveAspectRatio="none"
-          style={{ width: "100%", height: "110px", display: "block" }}
-        >
-          <path
-            d="M0,55 C180,110 360,0 540,55 C720,110 900,0 1080,55 C1260,110 1350,30 1440,55 L1440,110 L0,110 Z"
-            fill="#ffffff"
-          />
-        </svg>
-      </div>
     </section>
   );
 }

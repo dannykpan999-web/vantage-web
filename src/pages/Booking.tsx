@@ -56,7 +56,7 @@ export default function Booking() {
   const [selectedDate, setSelectedDate] = useState("");
   const [selectedSlot, setSelectedSlot] = useState<Slot | null>(null);
 
-  const { data: barbers, isLoading: barbersLoading } = useQuery({
+  const { data: barbers, isLoading: barbersLoading, isError: barbersError } = useQuery({
     queryKey: ["barbers"],
     queryFn: getBarbers,
   });
@@ -119,6 +119,11 @@ export default function Booking() {
               Elige tu Barbero
             </h2>
             {barbersLoading && <SkeletonCard />}
+            {barbersError && (
+              <p style={{ fontFamily: "Montserrat,sans-serif", fontWeight: 300, fontSize: "0.85rem", color: "#c00", textAlign: "center", padding: "2rem 0" }}>
+                Error al cargar barberos. Por favor recarga la página.
+              </p>
+            )}
             <div style={{ display: "grid", gridTemplateColumns: "repeat(auto-fit,minmax(220px,1fr))", gap: "1.5rem" }}>
               {barbers?.map(barber => (
                 <div key={barber.id} onClick={() => { setSelectedBarber(barber); setStep(2); }}

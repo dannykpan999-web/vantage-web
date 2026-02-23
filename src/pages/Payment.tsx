@@ -209,7 +209,7 @@ export default function Payment() {
                     marginTop: "1rem",
                   }}
                 >
-                  Verificacion {pollCount} &bull; Booking #{bookingId}
+                  Verificando pago automáticamente...
                 </p>
               )}
             </>

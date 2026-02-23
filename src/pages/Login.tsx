@@ -2,12 +2,14 @@ import { useState } from "react";
 import { useNavigate, Link } from "react-router-dom";
 import { login } from "../services/auth";
 import { useAuthStore } from "../store/authStore";
+import { useT } from "../i18n";
 import Input from "../components/ui/Input";
 import Button from "../components/ui/Button";
 
 export default function Login() {
   const navigate = useNavigate();
   const setAuth = useAuthStore((s) => s.setAuth);
+  const t = useT();
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [error, setError] = useState("");
@@ -25,7 +27,7 @@ export default function Login() {
       else navigate("/booking");
     } catch (err: unknown) {
       const msg =
-        err instanceof Error ? err.message : "Credenciales incorrectas";
+        err instanceof Error ? err.message : t("login.error");
       setError(msg);
     } finally {
       setLoading(false);
@@ -135,7 +137,7 @@ export default function Login() {
               VANTAGE
             </span>
             <span style={{ fontFamily: "Montserrat, sans-serif", fontWeight: 300, fontSize: "0.75rem", color: "rgba(255,255,255,0.6)", letterSpacing: "0.15em" }}>
-              La experiencia premium en barberia
+              {t("login.tagline")}
             </span>
           </div>
         </div>
@@ -154,7 +156,7 @@ export default function Login() {
               VANTAGE
             </h1>
             <p style={{ fontFamily: "Montserrat, sans-serif", fontWeight: 300, fontSize: "0.8rem", color: "rgba(255,255,255,0.6)", letterSpacing: "0.15em" }}>
-              La experiencia premium en barberia
+              {t("login.tagline")}
             </p>
           </div>
         </div>
@@ -171,19 +173,19 @@ export default function Login() {
             </Link>
 
             <h2 style={{ fontFamily: "'Playfair Display', serif", fontSize: "1.7rem", fontWeight: 700, color: "#000", marginBottom: "0.5rem" }}>
-              Bienvenido
+              {t("login.welcome")}
             </h2>
             <p style={{ fontFamily: "Montserrat, sans-serif", fontWeight: 300, fontSize: "0.85rem", color: "#757575", marginBottom: "2.5rem" }}>
-              Ingresa a tu cuenta para continuar
+              {t("login.subtitle")}
             </p>
 
             <form onSubmit={handleSubmit}>
               <div style={{ marginBottom: "1.5rem" }}>
-                <Input label="Correo Electronico" type="email" value={email}
+                <Input label={t("login.email")} type="email" value={email}
                   onChange={(e) => setEmail(e.target.value)} required autoComplete="email" />
               </div>
               <div style={{ marginBottom: "2rem" }}>
-                <Input label="Contrasena" type="password" value={password}
+                <Input label={t("login.password")} type="password" value={password}
                   onChange={(e) => setPassword(e.target.value)} required autoComplete="current-password" />
               </div>
 
@@ -194,14 +196,14 @@ export default function Login() {
               )}
 
               <Button type="submit" variant="primary" fullWidth loading={loading}>
-                Iniciar Sesion
+                {t("login.submit")}
               </Button>
             </form>
 
             <p style={{ fontFamily: "Montserrat, sans-serif", fontWeight: 300, fontSize: "0.8rem", color: "#757575", textAlign: "center", marginTop: "2rem" }}>
-              No tienes cuenta?{" "}
+              {t("login.noAccount")}{" "}
               <Link to="/register" style={{ color: "#000", textDecoration: "none", fontWeight: 600 }}>
-                Registrate
+                {t("login.register")}
               </Link>
             </p>
           </div>

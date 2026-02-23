@@ -2,6 +2,7 @@ import { useState } from "react";
 import { useNavigate, Link } from "react-router-dom";
 import { register } from "../services/auth";
 import { useAuthStore } from "../store/authStore";
+import { useT } from "../i18n";
 import Input from "../components/ui/Input";
 import Button from "../components/ui/Button";
 import type { UserRole } from "../types";
@@ -9,6 +10,7 @@ import type { UserRole } from "../types";
 export default function Register() {
   const navigate = useNavigate();
   const setAuth = useAuthStore((s) => s.setAuth);
+  const t = useT();
 
   const [name, setName] = useState("");
   const [email, setEmail] = useState("");
@@ -21,7 +23,7 @@ export default function Register() {
     e.preventDefault();
     setError("");
     if (password.length < 8) {
-      setError("La contrasena debe tener al menos 8 caracteres");
+      setError(t("register.minPassword"));
       return;
     }
     setLoading(true);
@@ -33,7 +35,7 @@ export default function Register() {
       else navigate("/booking");
     } catch (err: unknown) {
       const msg =
-        err instanceof Error ? err.message : "Error al crear la cuenta";
+        err instanceof Error ? err.message : t("register.error");
       setError(msg);
     } finally {
       setLoading(false);
@@ -148,7 +150,7 @@ export default function Register() {
               VANTAGE
             </span>
             <span style={{ fontFamily: "Montserrat, sans-serif", fontWeight: 300, fontSize: "0.75rem", color: "rgba(255,255,255,0.6)", letterSpacing: "0.15em" }}>
-              Donde el estilo se convierte en arte
+              {t("register.tagline")}
             </span>
           </div>
         </div>
@@ -167,7 +169,7 @@ export default function Register() {
               VANTAGE
             </h1>
             <p style={{ fontFamily: "Montserrat, sans-serif", fontWeight: 300, fontSize: "0.8rem", color: "rgba(255,255,255,0.6)", letterSpacing: "0.15em" }}>
-              Donde el estilo se convierte en arte
+              {t("register.tagline")}
             </p>
           </div>
         </div>
@@ -183,16 +185,16 @@ export default function Register() {
             </Link>
 
             <h2 style={{ fontFamily: "'Playfair Display', serif", fontSize: "1.7rem", fontWeight: 700, color: "#000", marginBottom: "0.5rem" }}>
-              Crear Cuenta
+              {t("register.title")}
             </h2>
             <p style={{ fontFamily: "Montserrat, sans-serif", fontWeight: 300, fontSize: "0.85rem", color: "#757575", marginBottom: "1.75rem" }}>
-              Unete a la experiencia Vantage
+              {t("register.subtitle")}
             </p>
 
             {/* Role selector */}
             <div style={{ marginBottom: "1.75rem" }}>
               <p style={{ fontFamily: "Montserrat, sans-serif", fontWeight: 300, fontSize: "0.7rem", letterSpacing: "0.15em", textTransform: "uppercase", color: "#757575", marginBottom: "0.75rem" }}>
-                Tipo de cuenta
+                {t("register.accountType")}
               </p>
               <div style={{ display: "flex", gap: "0.75rem" }}>
                 {(["customer", "barber"] as UserRole[]).map((r) => (
@@ -202,7 +204,7 @@ export default function Register() {
                     onClick={() => setRole(r)}
                     className={`role-btn${role === r ? " active" : ""}`}
                   >
-                    {r === "customer" ? "Cliente" : "Barbero"}
+                    {r === "customer" ? t("register.customer") : t("register.barber")}
                   </button>
                 ))}
               </div>
@@ -210,15 +212,15 @@ export default function Register() {
 
             <form onSubmit={handleSubmit}>
               <div style={{ marginBottom: "1.25rem" }}>
-                <Input label="Nombre Completo" type="text" value={name}
+                <Input label={t("register.fullName")} type="text" value={name}
                   onChange={(e) => setName(e.target.value)} required autoComplete="name" />
               </div>
               <div style={{ marginBottom: "1.25rem" }}>
-                <Input label="Correo Electronico" type="email" value={email}
+                <Input label={t("register.email")} type="email" value={email}
                   onChange={(e) => setEmail(e.target.value)} required autoComplete="email" />
               </div>
               <div style={{ marginBottom: "1.75rem" }}>
-                <Input label="Contrasena (minimo 8 caracteres)" type="password" value={password}
+                <Input label={t("register.password")} type="password" value={password}
                   onChange={(e) => setPassword(e.target.value)} required autoComplete="new-password" />
               </div>
 
@@ -229,14 +231,14 @@ export default function Register() {
               )}
 
               <Button type="submit" variant="primary" fullWidth loading={loading}>
-                Crear Cuenta
+                {t("register.submit")}
               </Button>
             </form>
 
             <p style={{ fontFamily: "Montserrat, sans-serif", fontWeight: 300, fontSize: "0.8rem", color: "#757575", textAlign: "center", marginTop: "2rem" }}>
-              Ya tienes cuenta?{" "}
+              {t("register.hasAccount")}{" "}
               <Link to="/login" style={{ color: "#000", textDecoration: "none", fontWeight: 600 }}>
-                Iniciar Sesion
+                {t("register.login")}
               </Link>
             </p>
           </div>

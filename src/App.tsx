@@ -8,6 +8,7 @@ import Payment from "./pages/Payment";
 import Wallet from "./pages/Wallet";
 import BarberDashboard from "./pages/BarberDashboard";
 import OwnerDashboard from "./pages/OwnerDashboard";
+import AiConcierge from "./components/AiConcierge";
 
 function PrivateRoute({ children, roles }: { children: React.ReactNode; roles?: string[] }) {
   const { isAuthenticated, user } = useAuthStore();
@@ -19,6 +20,7 @@ function PrivateRoute({ children, roles }: { children: React.ReactNode; roles?: 
 export default function App() {
   return (
     <BrowserRouter>
+      <AiConcierge />
       <Routes>
         <Route path="/" element={<Landing />} />
         <Route path="/login" element={<Login />} />

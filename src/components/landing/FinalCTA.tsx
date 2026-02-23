@@ -1,166 +1,131 @@
 import { useNavigate } from "react-router-dom";
+import { useInView } from "../../hooks/useInView";
 
 export default function FinalCTA() {
   const navigate = useNavigate();
+  const [cardRef, cardInView] = useInView();
 
   return (
-    <section
-      style={{
-        position: "relative",
-        overflow: "hidden",
-        minHeight: "500px",
-        display: "flex",
-        alignItems: "center",
-        justifyContent: "center",
-      }}
-    >
-      {/* Background image */}
-      <div
-        style={{
-          position: "absolute",
-          inset: 0,
-          backgroundImage: "url('/images/hero-2.webp')",
-          backgroundSize: "cover",
-          backgroundPosition: "center",
-          filter: "brightness(0.3) grayscale(100%)",
-        }}
-      />
+    <>
+      <style>{`
+        /* ── Desktop: overlapping absolute card ── */
+        .fcta-section {
+          position: relative;
+          min-height: clamp(480px, 60vw, 640px);
+          overflow: hidden;
+        }
+        .fcta-bg {
+          position: absolute; inset: 0;
+          background-image: url('/images/finalcta-bg.webp');
+          background-size: cover; background-position: center;
+          filter: grayscale(100%) brightness(0.45);
+          z-index: 0;
+        }
+        .fcta-card {
+          position: absolute;
+          top: clamp(28px, 6%, 60px);
+          right: clamp(28px, 4%, 60px);
+          bottom: clamp(28px, 6%, 60px);
+          width: clamp(300px, 38%, 500px);
+          background: #fff;
+          display: flex; flex-direction: column; justify-content: center;
+          padding: clamp(36px,4vw,64px) clamp(28px,3.5vw,52px);
+          z-index: 2;
+        }
 
-      {/* Content */}
-      <div
-        style={{
-          position: "relative",
-          zIndex: 1,
-          textAlign: "center",
-          padding: "5rem 1.5rem",
-          maxWidth: "700px",
-          margin: "0 auto",
-        }}
-      >
-        {/* Thin decorative line */}
+        /* ── Mobile: stack image above, card below ── */
+        @media (max-width: 768px) {
+          .fcta-section {
+            display: flex;
+            flex-direction: column;
+            min-height: unset;
+            overflow: visible;
+          }
+          .fcta-bg {
+            position: relative;
+            inset: auto;
+            height: 240px;
+            flex-shrink: 0;
+            filter: grayscale(100%) brightness(0.5);
+          }
+          .fcta-card {
+            position: relative;
+            inset: auto;
+            width: 100%;
+            padding: 36px 28px;
+          }
+        }
+      `}</style>
+
+      <section className="fcta-section">
+        {/* Background image */}
+        <div className="fcta-bg" />
+
+        {/* White panel card */}
         <div
+          className="fcta-card"
+          ref={cardRef}
           style={{
-            width: "1px",
-            height: "60px",
-            backgroundColor: "rgba(255,255,255,0.4)",
-            margin: "0 auto 2.5rem",
+            opacity: 0,
+            animation: cardInView ? "fadeInUp 0.7s ease-out forwards" : "none",
           }}
-        />
-
-        <p
-          style={{
+        >
+          <h2 style={{
             fontFamily: "Montserrat, sans-serif",
-            fontWeight: 300,
-            fontSize: "0.7rem",
-            letterSpacing: "0.3em",
-            textTransform: "uppercase",
-            color: "rgba(255,255,255,0.6)",
-            marginBottom: "1.5rem",
-          }}
-        >
-          Vantage Barbershop
-        </p>
+            fontSize: "clamp(22px,3vw,40px)", fontWeight: 800,
+            color: "#111", lineHeight: 1.1,
+            textTransform: "uppercase", letterSpacing: "0.02em",
+            marginBottom: "20px",
+          }}>
+            Barbería Que<br />Define Tu<br />Estilo
+          </h2>
 
-        <h2
-          style={{
-            fontFamily: "'Playfair Display', serif",
-            fontSize: "clamp(2.2rem, 5vw, 3.5rem)",
-            fontWeight: 700,
-            color: "#fff",
-            lineHeight: 1.2,
-            marginBottom: "1.5rem",
-          }}
-        >
-          Tu Proximo Nivel
-          <br />
-          Empieza Aqui
-        </h2>
+          <div style={{ width: "40px", height: "2px", background: "#111", marginBottom: "20px" }} />
 
-        <p
-          style={{
+          <p style={{
             fontFamily: "Montserrat, sans-serif",
-            fontWeight: 300,
-            fontSize: "1rem",
-            color: "rgba(255,255,255,0.7)",
-            marginBottom: "3rem",
-            lineHeight: 1.7,
-          }}
-        >
-          Reserva ahora y descubre por que miles de hombres
-          <br />
-          confian en Vantage para su imagen.
-        </p>
+            fontSize: "clamp(12px,1.2vw,14px)", fontWeight: 300,
+            color: "#666", lineHeight: 1.85,
+            marginBottom: "clamp(24px,4vw,48px)",
+          }}>
+            Nos encanta darte un look fresco que va con
+            tu estilo y te hace sentir en tu mejor versión
+            cada día.
+          </p>
 
-        <div
-          style={{
-            display: "flex",
-            gap: "1rem",
-            justifyContent: "center",
-            flexWrap: "wrap",
-          }}
-        >
-          <button
-            onClick={() => navigate("/register")}
-            style={{
-              fontFamily: "Montserrat, sans-serif",
-              fontWeight: 300,
-              fontSize: "0.75rem",
-              letterSpacing: "0.2em",
-              textTransform: "uppercase",
-              backgroundColor: "#fff",
-              color: "#000",
-              border: "none",
-              padding: "1rem 2.5rem",
-              cursor: "pointer",
-              transition: "opacity 0.3s ease",
-            }}
-            onMouseOver={(e) => {
-              (e.currentTarget as HTMLButtonElement).style.opacity = "0.85";
-            }}
-            onMouseOut={(e) => {
-              (e.currentTarget as HTMLButtonElement).style.opacity = "1";
-            }}
-          >
-            Crear Cuenta
-          </button>
+          <div style={{ width: "100%", height: "1px", background: "#e8e8e8", marginBottom: "clamp(18px,3vw,32px)" }} />
 
-          <button
-            onClick={() => navigate("/booking")}
-            style={{
+          <div style={{
+            display: "flex", alignItems: "center", justifyContent: "space-between",
+            flexWrap: "wrap", gap: "16px",
+          }}>
+            <p style={{
               fontFamily: "Montserrat, sans-serif",
-              fontWeight: 300,
-              fontSize: "0.75rem",
-              letterSpacing: "0.2em",
-              textTransform: "uppercase",
-              backgroundColor: "transparent",
-              color: "#fff",
-              border: "1px solid rgba(255,255,255,0.5)",
-              padding: "1rem 2.5rem",
-              cursor: "pointer",
-              transition: "border-color 0.3s ease",
-            }}
-            onMouseOver={(e) => {
-              (e.currentTarget as HTMLButtonElement).style.borderColor = "#fff";
-            }}
-            onMouseOut={(e) => {
-              (e.currentTarget as HTMLButtonElement).style.borderColor =
-                "rgba(255,255,255,0.5)";
-            }}
-          >
-            Reservar Cita
-          </button>
+              fontSize: "clamp(9px,1vw,12px)", fontWeight: 700,
+              letterSpacing: "2px", textTransform: "uppercase",
+              color: "#111", margin: 0,
+            }}>
+              ¿Listo para reservar hoy?
+            </p>
+            <button
+              onClick={() => navigate("/booking")}
+              style={{
+                fontFamily: "Montserrat, sans-serif",
+                fontSize: "10px", fontWeight: 600,
+                letterSpacing: "2px", textTransform: "uppercase",
+                background: "#111", color: "#fff",
+                border: "none", padding: "12px 24px",
+                cursor: "pointer", transition: "opacity 0.2s ease",
+                whiteSpace: "nowrap",
+              }}
+              onMouseOver={e => (e.currentTarget.style.opacity = "0.75")}
+              onMouseOut={e => (e.currentTarget.style.opacity = "1")}
+            >
+              Reservar
+            </button>
+          </div>
         </div>
-
-        {/* Thin decorative line bottom */}
-        <div
-          style={{
-            width: "1px",
-            height: "60px",
-            backgroundColor: "rgba(255,255,255,0.4)",
-            margin: "3rem auto 0",
-          }}
-        />
-      </div>
-    </section>
+      </section>
+    </>
   );
 }

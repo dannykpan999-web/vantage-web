@@ -9,6 +9,7 @@ import BarberTeam from "../components/landing/BarberTeam";
 import Gallery from "../components/landing/Gallery";
 import Testimonials from "../components/landing/Testimonials";
 import FinalCTA from "../components/landing/FinalCTA";
+import ContactSection from "../components/landing/ContactSection";
 
 export default function Landing() {
   return (
@@ -20,14 +21,13 @@ export default function Landing() {
         {/* Studio intro — description paragraph below hero */}
         <section style={{
           padding: "clamp(52px,7vw,96px) clamp(24px,12vw,200px)",
-          backgroundColor: "#fff",
-          borderBottom: "1px solid #e5e5e5",
+          backgroundColor: "#0a0a0a",
           textAlign: "center",
         }}>
           <p style={{
             fontFamily: "Montserrat, sans-serif",
             fontSize: "clamp(13px,1.5vw,16px)", fontWeight: 300,
-            color: "#555", lineHeight: 2.1,
+            color: "rgba(255,255,255,0.65)", lineHeight: 2.1,
             maxWidth: "780px", margin: "0 auto",
             letterSpacing: "0.02em",
           }}>
@@ -48,6 +48,7 @@ export default function Landing() {
         <Gallery />
         <Testimonials />
         <FinalCTA />
+        <ContactSection />
       </main>
       <Footer />
     </>

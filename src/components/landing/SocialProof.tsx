@@ -1,114 +1,110 @@
 import { useEffect, useState } from "react";
 import { useInView } from "../../hooks/useInView";
 
-const stats = [
-  {
-    count: 500, suffix: "+", label: "Citas Reservadas", decimals: 0,
-    icon: (
-      <svg width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.2" strokeLinecap="round" strokeLinejoin="round">
-        <rect x="3" y="4" width="18" height="18" rx="2" ry="2"/>
-        <line x1="16" y1="2" x2="16" y2="6"/><line x1="8" y1="2" x2="8" y2="6"/>
-        <line x1="3" y1="10" x2="21" y2="10"/>
-      </svg>
-    ),
-  },
-  {
-    count: 4.9, suffix: "★", label: "Calificación", decimals: 1,
-    icon: (
-      <svg width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.2" strokeLinecap="round" strokeLinejoin="round">
-        <polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"/>
-      </svg>
-    ),
-  },
-  {
-    count: 12, suffix: "+", label: "Barberos", decimals: 0,
-    icon: (
-      <svg width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.2" strokeLinecap="round" strokeLinejoin="round">
-        <circle cx="9" cy="7" r="4"/><path d="M3 21v-2a4 4 0 0 1 4-4h4a4 4 0 0 1 4 4v2"/>
-        <path d="M16 3.13a4 4 0 0 1 0 7.75"/><path d="M21 21v-2a4 4 0 0 0-3-3.85"/>
-      </svg>
-    ),
-  },
-  {
-    count: 3, suffix: "", label: "Sucursales", decimals: 0,
-    icon: (
-      <svg width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.2" strokeLinecap="round" strokeLinejoin="round">
-        <path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0 1 18 0z"/>
-        <circle cx="12" cy="10" r="3"/>
-      </svg>
-    ),
-  },
-];
-
-function StatItem({ count, suffix, label, icon, decimals, inView, delay }: {
-  count: number; suffix: string; label: string; icon: React.ReactNode;
-  decimals: number; inView: boolean; delay: number;
-}) {
-  const [display, setDisplay] = useState(0);
+export default function SocialProof() {
+  const [ref, inView] = useInView();
+  const [count, setCount] = useState(0);
 
   useEffect(() => {
     if (!inView) return;
     const duration = 1400;
     const steps = 60;
-    const interval = duration / steps;
     let step = 0;
     const timer = setInterval(() => {
       step++;
-      const progress = step / steps;
-      const eased = 1 - Math.pow(1 - progress, 3); // ease-out cubic
-      setDisplay(parseFloat((count * eased).toFixed(decimals)));
-      if (step >= steps) { setDisplay(count); clearInterval(timer); }
-    }, interval);
+      const eased = 1 - Math.pow(1 - step / steps, 3);
+      setCount(Math.floor(500 * eased));
+      if (step >= steps) { setCount(500); clearInterval(timer); }
+    }, duration / steps);
     return () => clearInterval(timer);
-  }, [inView, count, decimals]);
+  }, [inView]);
 
   return (
-    <div
-      style={{
-        textAlign: "center",
-        minWidth: "100px",
-        opacity: 0,
-        animation: inView ? `fadeInUp 0.7s ease-out ${delay}s forwards` : "none",
-      }}
-    >
-      <div style={{ color: "#000", marginBottom: "12px", display: "flex", justifyContent: "center" }}>
-        {icon}
-      </div>
-      <div style={{
-        fontFamily: "'Playfair Display',serif",
-        fontSize: "clamp(22px,3vw,34px)", fontWeight: 400,
-        color: "#000", lineHeight: 1, marginBottom: "6px",
-      }}>
-        {decimals > 0 ? display.toFixed(decimals) : Math.floor(display)}{suffix}
-      </div>
-      <div style={{
-        fontFamily: "Montserrat,sans-serif",
-        fontSize: "10px", fontWeight: 500,
-        letterSpacing: "2px", textTransform: "uppercase", color: "#757575",
-      }}>{label}</div>
-    </div>
-  );
-}
+    <section style={{ backgroundColor: "#0a0a0a", overflow: "hidden" }}>
+      <style>{`
+        .sp-inner { display: flex; align-items: stretch; min-height: 580px; }
+        .sp-photo-col { flex: 0 0 50%; position: relative; overflow: hidden; }
+        .sp-photo-col img { width: 100%; height: 100%; object-fit: cover; object-position: center top; display: block; filter: grayscale(100%) brightness(0.75); }
+        .sp-content { flex: 1; display: flex; flex-direction: column; justify-content: center; padding: clamp(48px,6vw,80px) clamp(36px,5vw,80px); }
+        @media (max-width: 860px) {
+          .sp-inner { flex-direction: column; min-height: auto; }
+          .sp-photo-col { flex: none; height: 300px; }
+          .sp-content { padding: 48px 24px; }
+        }
+      `}</style>
 
-export default function SocialProof() {
-  const [ref, inView] = useInView();
+      <div className="sp-inner">
 
-  return (
-    <section style={{
-      borderTop: "1px solid #e5e5e5", borderBottom: "1px solid #e5e5e5",
-      padding: "40px clamp(24px,8vw,120px)",
-    }}>
-      <div
-        ref={ref}
-        style={{
-          maxWidth: "1400px", margin: "0 auto",
-          display: "flex", alignItems: "center", justifyContent: "space-around",
-          flexWrap: "wrap", gap: "32px",
-        }}
-      >
-        {stats.map((s, i) => (
-          <StatItem key={i} {...s} inView={inView} delay={i * 0.12} />
-        ))}
+        {/* Left: full-height photo */}
+        <div className="sp-photo-col" style={{
+          opacity: 0,
+          animation: inView ? "fadeInUp 0.8s ease-out 0.1s forwards" : "none",
+        }}>
+          <img src="/images/image1.webp" alt="Vantage Barbershop" loading="lazy" />
+        </div>
+
+        {/* Right: content */}
+        <div ref={ref} className="sp-content" style={{
+          opacity: 0,
+          animation: inView ? "fadeInUp 0.8s ease-out 0.25s forwards" : "none",
+        }}>
+
+          {/* Label */}
+          <p style={{
+            fontFamily: "Montserrat,sans-serif", fontSize: "10px", fontWeight: 600,
+            letterSpacing: "3px", textTransform: "uppercase",
+            color: "#D4AF37", marginBottom: "28px",
+          }}>Excelencia Reconocida</p>
+
+          {/* Big rating */}
+          <div style={{
+            fontFamily: "'Playfair Display',serif",
+            fontSize: "clamp(72px,9vw,110px)", fontWeight: 400,
+            color: "#fff", lineHeight: 1, marginBottom: "12px",
+          }}>4.9</div>
+
+          {/* Stars */}
+          <div style={{
+            color: "#D4AF37", fontSize: "clamp(16px,1.8vw,20px)",
+            letterSpacing: "6px", marginBottom: "16px",
+          }}>★ ★ ★ ★ ★</div>
+
+          {/* Sub label */}
+          <p style={{
+            fontFamily: "Montserrat,sans-serif", fontSize: "clamp(10px,1vw,11px)", fontWeight: 300,
+            letterSpacing: "2px", textTransform: "uppercase",
+            color: "rgba(255,255,255,0.4)", marginBottom: "48px",
+          }}>Por más de 1,250 clientes exclusivos</p>
+
+          {/* Thin divider */}
+          <div style={{
+            width: "48px", height: "1px",
+            backgroundColor: "rgba(255,255,255,0.12)", marginBottom: "48px",
+          }} />
+
+          {/* Mini stats */}
+          <div style={{ display: "flex", gap: "clamp(24px,4vw,48px)", flexWrap: "wrap" }}>
+            {[
+              { val: `${count}+`, label: "Citas" },
+              { val: "12+",       label: "Barberos Elite" },
+              { val: "3",         label: "Sucursales" },
+            ].map((s, i) => (
+              <div key={i}>
+                <div style={{
+                  fontFamily: "'Playfair Display',serif",
+                  fontSize: "clamp(22px,2.5vw,30px)", fontWeight: 400,
+                  color: "#fff", lineHeight: 1,
+                }}>{s.val}</div>
+                <div style={{
+                  fontFamily: "Montserrat,sans-serif", fontSize: "10px", fontWeight: 400,
+                  letterSpacing: "2px", textTransform: "uppercase",
+                  color: "rgba(255,255,255,0.32)", marginTop: "8px",
+                }}>{s.label}</div>
+              </div>
+            ))}
+          </div>
+
+        </div>
       </div>
     </section>
   );

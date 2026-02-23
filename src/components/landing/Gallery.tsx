@@ -51,18 +51,6 @@ export default function Gallery() {
         padding: "var(--section-pad) 1.5rem",
       }}
     >
-      {/* Angular divider: white V pointing DOWN into dark Gallery */}
-      <div style={{ position: "absolute", top: 0, left: 0, right: 0, zIndex: 3, lineHeight: 0 }}>
-        <svg
-          viewBox="0 0 1440 90"
-          xmlns="http://www.w3.org/2000/svg"
-          preserveAspectRatio="none"
-          style={{ width: "100%", height: "clamp(30px, 6.25vw, 90px)", display: "block" }}
-        >
-          <path d="M0,0 L720,90 L1440,0 Z" fill="#ffffff" />
-        </svg>
-      </div>
-
       {/* Heading */}
       <div
         ref={headingRef}

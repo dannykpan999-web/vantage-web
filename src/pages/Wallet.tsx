@@ -213,7 +213,7 @@ export default function Wallet() {
                     marginBottom: "1rem",
                   }}
                 >
-                  Solicitud enviada. El dueno la revisara pronto.
+                  Solicitud enviada. El dueño la revisará pronto.
                 </p>
               )}
 
