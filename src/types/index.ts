@@ -28,9 +28,9 @@ export interface Barber {
 }
 
 export interface Slot {
-  id: string;
-  barber_id: string;
-  date: string;
+  id?: string;
+  barber_id?: string;
+  date?: string;
   start_time: string;
   end_time: string;
   is_booked: boolean;

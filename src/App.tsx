@@ -8,6 +8,9 @@ import Payment from "./pages/Payment";
 import Wallet from "./pages/Wallet";
 import BarberDashboard from "./pages/BarberDashboard";
 import OwnerDashboard from "./pages/OwnerDashboard";
+import LandingEditor from "./pages/LandingEditor";
+import BarberProfilePage from "./pages/BarberProfilePage";
+import BarberPortfolioPage from "./pages/BarberPortfolioPage";
 import AiConcierge from "./components/AiConcierge";
 
 function PrivateRoute({ children, roles }: { children: React.ReactNode; roles?: string[] }) {
@@ -30,6 +33,9 @@ export default function App() {
         <Route path="/wallet" element={<PrivateRoute roles={["barber"]}><Wallet /></PrivateRoute>} />
         <Route path="/barber-dashboard" element={<PrivateRoute roles={["barber"]}><BarberDashboard /></PrivateRoute>} />
         <Route path="/owner-dashboard" element={<PrivateRoute roles={["owner"]}><OwnerDashboard /></PrivateRoute>} />
+        <Route path="/owner-landing" element={<PrivateRoute roles={["owner"]}><LandingEditor /></PrivateRoute>} />
+        <Route path="/profile" element={<PrivateRoute roles={["barber","owner"]}><BarberProfilePage /></PrivateRoute>} />
+        <Route path="/barber/:id" element={<BarberPortfolioPage />} />
         <Route path="*" element={<Navigate to="/" replace />} />
       </Routes>
     </BrowserRouter>

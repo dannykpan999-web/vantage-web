@@ -170,10 +170,18 @@ export default function Header() {
           height: "72px",
         }}>
           <Link to="/" style={{
-            fontFamily: "'Playfair Display',serif", fontSize: "22px", fontWeight: 400,
-            color: textColor, letterSpacing: "0.06em", textDecoration: "none",
-            transition: "color 0.4s ease-in-out", textShadow: shadow,
-          }}>VANTAGE</Link>
+            display: "inline-flex", alignItems: "center",
+            textDecoration: "none", transition: "opacity 0.3s ease",
+          }}>
+            <span style={{
+              fontFamily: "'Playfair Display', Georgia, serif",
+              fontSize: "20px", fontWeight: 400,
+              color: textColor, letterSpacing: "0.28em", textTransform: "uppercase",
+              textShadow: transparent ? shadow : "none",
+              transition: "color 0.4s ease-in-out, text-shadow 0.4s ease-in-out",
+              lineHeight: 1,
+            }}>VANTAGE</span>
+          </Link>
 
           {/* Desktop nav */}
           <div className="v-desktop-nav">
@@ -197,11 +205,27 @@ export default function Header() {
                 }}>{t("nav.book")}</Link>
               </>
             )}
-            {isAuthenticated && (
+            {isAuthenticated && user?.role === "customer" && (
               <>
-                {user?.role === "customer" && (
-                  <Link to="/booking" className="v-nav-item" style={navStyle}>{t("nav.book")}</Link>
-                )}
+                {LANDING_NAV.map(item => (
+                  <button key={item.id} className="v-nav-item"
+                    onClick={() => handleNavClick(item.id)} style={navStyle}>
+                    {t(item.key)}
+                  </button>
+                ))}
+                <Link to="/booking" style={{
+                  background: transparent ? "rgba(255,255,255,0.95)" : "#000",
+                  color: transparent ? "#000" : "#fff",
+                  padding: "10px 24px",
+                  fontFamily: "Montserrat,sans-serif", fontSize: "11px", fontWeight: 500,
+                  letterSpacing: "2px", textTransform: "uppercase",
+                  borderRadius: "1px", textDecoration: "none",
+                  transition: "all 0.3s ease-in-out",
+                }}>{t("nav.book")}</Link>
+              </>
+            )}
+            {isAuthenticated && user?.role !== "customer" && (
+              <>
                 {user?.role === "barber" && (
                   <Link to="/wallet" className="v-nav-item" style={navStyle}>{t("nav.wallet")}</Link>
                 )}
@@ -259,10 +283,14 @@ export default function Header() {
             height: "80px", flexShrink: 0,
             padding: "0 clamp(32px,8vw,64px)",
           }}>
-            <span style={{
-              fontFamily: "'Playfair Display',serif", fontSize: "18px",
-              fontWeight: 400, color: TEXT_MAIN, letterSpacing: "0.12em",
-            }}>VANTAGE</span>
+            <span
+              onClick={() => { setMenuOpen(false); navigate("/"); }}
+              style={{
+                fontFamily: "'Playfair Display', Georgia, serif",
+                fontSize: "20px", fontWeight: 400,
+                color: TEXT_MAIN, letterSpacing: "0.28em", textTransform: "uppercase",
+                lineHeight: 1, cursor: "pointer",
+              }}>VANTAGE</span>
             <button onClick={() => setMenuOpen(false)} aria-label="Cerrar" style={{
               position: "absolute", right: "clamp(20px,5vw,40px)",
               background: "none", border: "none", cursor: "pointer",
@@ -274,11 +302,11 @@ export default function Header() {
           </div>
           <div style={{ height: "1px", backgroundColor: GOLD_BORDER, flexShrink: 0 }} />
 
-          {/* Main content — LEFT-ALIGNED items, generous breathing room */}
+          {/* Main content — CENTERED items */}
           <div style={{
             flex: 1, overflowY: "auto",
             display: "flex", flexDirection: "column",
-            alignItems: "flex-start",
+            alignItems: "center",
             padding: "clamp(36px,5vh,56px) clamp(32px,8vw,64px) clamp(24px,3vh,36px)",
           }}>
 
@@ -373,20 +401,79 @@ export default function Header() {
                 </>
               )}
 
-              {isAuthenticated && (
+              {/* Customer — full landing nav + Reservar */}
+              {isAuthenticated && user?.role === "customer" && (
                 <>
-                  {user?.role === "customer" && (
-                    <button className="vm-nav-btn"
-                      onClick={() => { setMenuOpen(false); navigate("/booking"); }}
+                  {MOBILE_NAV.map((item, i) => (
+                    <button key={item.id} className="vm-nav-btn"
+                      onClick={() => handleNavClick(item.id)}
                       style={{
-                        fontFamily: "Montserrat,sans-serif", fontSize: "clamp(13px,3.5vw,17px)", fontWeight: 300,
-                        color: TEXT_MAIN, background: "none", border: "none", cursor: "pointer",
-                        textAlign: "left", padding: "clamp(12px,1.8vh,17px) 0",
-                        letterSpacing: "4px", textTransform: "uppercase", width: "100%",
+                        fontFamily: "Montserrat,sans-serif",
+                        fontSize: "clamp(14px,3.5vw,18px)", fontWeight: 300,
+                        color: TEXT_MAIN, background: "none", border: "none",
+                        cursor: "pointer", textAlign: "left",
+                        padding: "clamp(18px,2.8vh,26px) 0",
+                        letterSpacing: "4px", textTransform: "uppercase",
+                        width: "100%", display: "block",
                         borderBottom: "1px solid rgba(197,160,89,0.1)",
-                        opacity: 0, animation: "fadeIn 0.4s ease 0.08s forwards",
-                      }}>Reservar</button>
-                  )}
+                        opacity: 0,
+                        animation: `fadeIn 0.4s ease ${0.08 + i * 0.08}s forwards`,
+                      }}>
+                      {t(item.key)}
+                    </button>
+                  ))}
+                  <button className="vm-nav-btn" onClick={() => handleNavClick("shop")}
+                    style={{
+                      fontFamily: "Montserrat,sans-serif",
+                      fontSize: "clamp(14px,3.5vw,18px)", fontWeight: 300,
+                      color: GOLD, background: "none", border: "none",
+                      cursor: "pointer", textAlign: "left",
+                      padding: "clamp(18px,2.8vh,26px) 0",
+                      letterSpacing: "4px", textTransform: "uppercase",
+                      width: "100%", display: "block",
+                      borderBottom: "1px solid rgba(197,160,89,0.1)",
+                      opacity: 0, animation: "fadeIn 0.4s ease 0.32s forwards",
+                    }}>
+                    {t("nav.shop")}
+                  </button>
+                </>
+              )}
+
+              {/* Barber / Owner — full nav + panel */}
+              {isAuthenticated && user?.role !== "customer" && (
+                <>
+                  {MOBILE_NAV.map((item, i) => (
+                    <button key={item.id} className="vm-nav-btn"
+                      onClick={() => handleNavClick(item.id)}
+                      style={{
+                        fontFamily: "Montserrat,sans-serif",
+                        fontSize: "clamp(14px,3.5vw,18px)", fontWeight: 300,
+                        color: TEXT_MAIN, background: "none", border: "none",
+                        cursor: "pointer", textAlign: "left",
+                        padding: "clamp(18px,2.8vh,26px) 0",
+                        letterSpacing: "4px", textTransform: "uppercase",
+                        width: "100%", display: "block",
+                        borderBottom: "1px solid rgba(197,160,89,0.1)",
+                        opacity: 0,
+                        animation: `fadeIn 0.4s ease ${0.06 + i * 0.07}s forwards`,
+                      }}>
+                      {t(item.key)}
+                    </button>
+                  ))}
+                  <button className="vm-nav-btn" onClick={() => handleNavClick("shop")}
+                    style={{
+                      fontFamily: "Montserrat,sans-serif",
+                      fontSize: "clamp(14px,3.5vw,18px)", fontWeight: 300,
+                      color: GOLD, background: "none", border: "none",
+                      cursor: "pointer", textAlign: "left",
+                      padding: "clamp(18px,2.8vh,26px) 0",
+                      letterSpacing: "4px", textTransform: "uppercase",
+                      width: "100%", display: "block",
+                      borderBottom: "1px solid rgba(197,160,89,0.1)",
+                      opacity: 0, animation: "fadeIn 0.4s ease 0.27s forwards",
+                    }}>
+                    {t("nav.shop")}
+                  </button>
                   {user?.role === "barber" && (
                     <button className="vm-nav-btn"
                       onClick={() => { setMenuOpen(false); navigate("/wallet"); }}
@@ -396,7 +483,7 @@ export default function Header() {
                         textAlign: "left", padding: "clamp(12px,1.8vh,17px) 0",
                         letterSpacing: "4px", textTransform: "uppercase", width: "100%",
                         borderBottom: "1px solid rgba(197,160,89,0.1)",
-                        opacity: 0, animation: "fadeIn 0.4s ease 0.08s forwards",
+                        opacity: 0, animation: "fadeIn 0.4s ease 0.34s forwards",
                       }}>Billetera</button>
                   )}
                   <button className="vm-nav-btn"
@@ -406,14 +493,14 @@ export default function Header() {
                       color: TEXT_MAIN, background: "none", border: "none", cursor: "pointer",
                       textAlign: "left", padding: "clamp(12px,1.8vh,17px) 0",
                       letterSpacing: "4px", textTransform: "uppercase", width: "100%",
-                      opacity: 0, animation: "fadeIn 0.4s ease 0.16s forwards",
+                      opacity: 0, animation: "fadeIn 0.4s ease 0.41s forwards",
                     }}>Panel</button>
                 </>
               )}
             </nav>
 
             {/* ── RESERVAR — full width gradient metal button ───────────────── */}
-            {!isAuthenticated && (
+            {(!isAuthenticated || user?.role === "customer") && (
               <button className="vm-reservar"
                 onClick={() => { setMenuOpen(false); navigate("/booking"); }}
                 style={{

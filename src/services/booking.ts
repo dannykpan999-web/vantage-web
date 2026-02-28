@@ -8,16 +8,20 @@ export const getBarbers = async (): Promise<Barber[]> => {
 
 export const getSlots = async (
   barberId: string,
-  date: string
+  date: string,
+  serviceId?: string
 ): Promise<Slot[]> => {
-  const r = await api.get(`/barbers/${barberId}/slots?date=${date}`);
+  let url = `/barbers/${barberId}/slots?date=${date}`;
+  if (serviceId) url += `&service_id=${serviceId}`;
+  const r = await api.get(url);
   return r.data;
 };
 
 export const createBooking = async (data: {
   barber_id: string;
   service_id: string;
-  slot_id: string;
+  date: string;
+  start_time: string;
 }): Promise<Booking> => {
   const r = await api.post("/bookings", data);
   return r.data;

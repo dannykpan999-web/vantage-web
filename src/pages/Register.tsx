@@ -221,7 +221,7 @@ export default function Register() {
               </div>
               <div style={{ marginBottom: "1.75rem" }}>
                 <Input label={t("register.password")} type="password" value={password}
-                  onChange={(e) => setPassword(e.target.value)} required autoComplete="new-password" />
+                  onChange={(e) => setPassword(e.target.value)} required autoComplete="new-password" showToggle />
               </div>
 
               {error && (

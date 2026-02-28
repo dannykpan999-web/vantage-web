@@ -10,7 +10,7 @@ sftp = ssh.open_sftp()
 local_dist = "f:/workana_work/JohnClass/vantage-web/dist"
 remote_base = "/var/www/vantage"
 
-stdin, stdout, stderr = ssh.exec_command("find /var/www/vantage -maxdepth 1 -not -name 'api' -not -path '/var/www/vantage' -exec rm -rf {} +")
+stdin, stdout, stderr = ssh.exec_command("find /var/www/vantage -maxdepth 1 -not -name 'api' -not -name 'uploads' -not -path '/var/www/vantage' -exec rm -rf {} +")
 stdout.read()
 
 for root, dirs, files in os.walk(local_dist):

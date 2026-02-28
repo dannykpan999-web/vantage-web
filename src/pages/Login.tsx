@@ -186,7 +186,7 @@ export default function Login() {
               </div>
               <div style={{ marginBottom: "2rem" }}>
                 <Input label={t("login.password")} type="password" value={password}
-                  onChange={(e) => setPassword(e.target.value)} required autoComplete="current-password" />
+                  onChange={(e) => setPassword(e.target.value)} required autoComplete="current-password" showToggle />
               </div>
 
               {error && (

@@ -6,10 +6,20 @@ import type {
   DashboardBarber,
 } from "../types";
 
+export interface CartProduct {
+  id: string;
+  quantity: number;
+}
+
 export const createPaymentLink = async (
-  bookingId: string
+  bookingId: string,
+  depositAmount?: number,
+  products?: CartProduct[]
 ): Promise<{ payment_url: string | null; qr_code: string | null; is_sandbox: boolean }> => {
-  const r = await api.post("/payments/create-link", { booking_id: bookingId });
+  const body: Record<string, unknown> = { booking_id: bookingId };
+  if (depositAmount !== undefined) body.deposit_amount = depositAmount;
+  if (products && products.length > 0) body.products = products;
+  const r = await api.post("/payments/create-link", body);
   return r.data;
 };
 

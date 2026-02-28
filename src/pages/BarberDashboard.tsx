@@ -88,7 +88,24 @@ export default function BarberDashboard() {
             </h1>
           </div>
 
-          <div style={{ display: "flex", gap: "1rem" }}>
+          <div style={{ display: "flex", gap: "1rem", flexWrap: "wrap" }}>
+            <button
+              onClick={() => navigate("/profile")}
+              style={{
+                fontFamily: "Montserrat, sans-serif",
+                fontWeight: 300,
+                fontSize: "0.7rem",
+                letterSpacing: "0.15em",
+                textTransform: "uppercase",
+                backgroundColor: "transparent",
+                color: "var(--black)",
+                border: "1px solid var(--gray-border)",
+                padding: "0.75rem 1.5rem",
+                cursor: "pointer",
+              }}
+            >
+              Mi Perfil
+            </button>
             <button
               onClick={() => navigate("/wallet")}
               style={{

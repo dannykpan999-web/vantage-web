@@ -1,8 +1,19 @@
 import { useT } from "../../i18n";
+import { useQuery } from "@tanstack/react-query";
+import { getLandingContent } from "../../services/landing";
 
 export default function Footer() {
   const year = new Date().getFullYear();
   const t = useT();
+  const { data: landingContent } = useQuery({
+    queryKey: ["landing"],
+    queryFn: getLandingContent,
+    staleTime: 1000 * 60 * 5,
+  });
+  const contact = landingContent?.contact;
+  const address = contact?.address || "1557 Chambers Street, Trenton NJ";
+  const phone   = contact?.phone   || "+1 (609) 931-9095";
+  const email   = contact?.email   || "soporte@vantagestudioapp.com";
 
   const links = [
     { key: "footer.nav.home"     as const, href: "/" },
@@ -125,18 +136,17 @@ export default function Footer() {
         {/* Col 2 — Contact */}
         <div>
           <p className="ft-col-title">{t("footer.contact")}</p>
-          {/* Email — formal archive only */}
-          <a href="mailto:soporte@vantagestudioapp.com" className="ft-link">
-            soporte@vantagestudioapp.com
-          </a>
+          <a href={`mailto:${email}`} className="ft-link">{email}</a>
+          {phone && (
+            <a href={`tel:${phone}`} className="ft-link">{phone}</a>
+          )}
           <p style={{
             fontFamily: "Montserrat, sans-serif",
             fontSize: "12px", fontWeight: 300,
             color: "rgba(255,255,255,0.55)", lineHeight: 1.8,
             marginBottom: "16px",
           }}>
-            785 15h Street, Office 47<br />
-            Nueva York, NY 10001
+            {address}
           </p>
           {/* WhatsApp VIP — luxury gold styling */}
           <a
